@@ -278,7 +278,7 @@ def add_item_to_storage(id_item):
     db_sess = db_session.create_session()
     item = db_sess.query(Item).filter(Item.id == id_item).first()
     
-    if item:
+    if item and current_user.is_admin:
         db_sess.delete(item)
         db_sess.commit()
         flash('Товар удален со склада', 'info')
@@ -293,7 +293,7 @@ def item_plus(id_item):
     db_sess = db_session.create_session()
     item = db_sess.query(Item).filter(Item.id == id_item).first()
     
-    if item:
+    if item and current_user.is_admin:
         item.count += 1
         db_sess.commit()
         flash('Товар добавлен(+1)', 'info')
@@ -308,7 +308,7 @@ def item_minus(id_item):
     db_sess = db_session.create_session()
     item = db_sess.query(Item).filter(Item.id == id_item).first()
     
-    if item and item.count != 0:
+    if item and item.count != 0 and current_user.is_admin:
         item.count -= 1
         db_sess.commit()
         flash('Товар удален(-1)', 'info')
@@ -339,22 +339,26 @@ def buy_items():
 
 
 @app.route("/storage")
+@login_required
 def storage():
     db_sess = db_session.create_session()
-    items = db_sess.query(Item).all()
+    if current_user.is_admin:
+        items = db_sess.query(Item).all()
 
-    categories = [
-        {'id': 1, 'name': 'Футболки'},
-        {'id': 2, 'name': 'Джинсы'},
-        {'id': 3, 'name': 'Платья'},
-        {'id': 4, 'name': 'Обувь'}
-    ]
+        categories = [
+            {'id': 1, 'name': 'Футболки'},
+            {'id': 2, 'name': 'Джинсы'},
+            {'id': 3, 'name': 'Платья'},
+            {'id': 4, 'name': 'Обувь'}
+        ]
 
-    return render_template("storage.html",
-                           title='FashionStore - Главная',
-                           products=items,
-                           categories=categories,
-                           current_user=current_user)
+        return render_template("storage.html",
+                            title='Склад',
+                            products=items,
+                            categories=categories,
+                            current_user=current_user)
+    else:
+        return render_template("no_permission.html")
 
 
 @app.route('/change_password', methods=['GET', 'POST'])

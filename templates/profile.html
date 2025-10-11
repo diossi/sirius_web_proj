@@ -24,9 +24,12 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#settings" data-bs-toggle="tab">Настройки</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#admin" data-bs-toggle="tab">Настройки админа</a>
-                        </li>
+                        
+                        {% if current_user.is_admin %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="#admin" data-bs-toggle="tab">Настройки админа</a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
 
@@ -46,14 +49,14 @@
                             </div>
                         </div>
                         {% if current_user.is_admin %}
-                        <div class="tab-pane" id="admin">
-                            <h5>Настройки админ</h5>
+                            <div class="tab-pane" id="admin">
+                                <h5>Настройки админ</h5>
 
-                            
-                            <div class="mb-3">
-                                <a href="{{ url_for('storage') }}" class="btn btn-outline-primary">Перейти на склад</a>
+                                
+                                <div class="mb-3">
+                                    <a href="{{ url_for('storage') }}" class="btn btn-outline-primary">Перейти на склад</a>
+                                </div>
                             </div>
-                        </div>
                         {% endif %}
 
                     </div>
