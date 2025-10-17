@@ -248,7 +248,7 @@ def remove_want_item(id_item):
         db_sess.delete(want_buy_item)
         cur_user = db_sess.query(User).filter(User.id == current_user.id).first()
         cur_user.count_want_buy_item -= 1
-        item = db_sess.query(Item).filter(WantBuyItem.id_original_item == Item.id).first()
+        item = db_sess.query(Item).filter(want_buy_item.id_original_item == Item.id).first()
         item.count += 1
         db_sess.commit()
         flash('Товар удален из корзины', 'info')
